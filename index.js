@@ -35,7 +35,7 @@ const BlogSchema = new Schema({
 const BlogModel = mongoose.models.Blog || mongoose.model('Blog', BlogSchema);
 
 app.get('/blog/create', (req, res) => {
-  res.sendFile(__dirname + '/views/blogCreate.html');
+  res.render('blogCreate');
 });
 
 app.post('/blog/create', async (req, res) => {
@@ -54,7 +54,7 @@ app.post('/blog/create', async (req, res) => {
 // Read All Blogs
 app.get('/', async (req, res) => {
   const allBlogs = await BlogModel.find();
-  res.send('全ブログデータを読み取りました');
+  res.render('index', { allBlogs });
 });
 
 // Read Single Blog

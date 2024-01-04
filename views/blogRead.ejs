@@ -4,15 +4,16 @@
 <html lang="ja">
   <head>
     <title>BlogReadページ</title>
+    <%- include("./head"); %>
   </head>
   <body>
-    <header>Header</header>
+    <%- include("./header"); %>
     <main>
       <div>
         <h1><%= singleBlog.title %></h1>
         <p><%= singleBlog.textBody%></p>
       </div>
     </main>
-    <footer>Footer</footer>
+    <%- include("./footer"); %>
   </body>
 </html>
