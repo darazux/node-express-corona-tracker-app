@@ -6,6 +6,8 @@ require('dotenv').config();
 app.use(express.urlencoded({ extended: true }));
 const mongoose = require('mongoose');
 
+app.set('view engine', 'ejs');
+
 // Connecting MongoDB
 const mongodbUserName = process.env.MONGODB_USERNAME;
 const mongodbPassword = process.env.MONGODB_PASSWORD;
@@ -59,8 +61,7 @@ app.get('/', async (req, res) => {
 app.get('/blog/:id', async (req, res) => {
   const id = req.params.id;
   const singleBlog = await BlogModel.findById(id);
-  console.log(singleBlog);
-  res.send('個別の記事ページ');
+  res.render('blogRead', { singleBlog });
 });
 
 // Update Blog
