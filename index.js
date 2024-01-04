@@ -86,7 +86,7 @@ app.post('/blog/update/:id', async (req, res) => {
 app.get('/blog/delete/:id', async (req, res) => {
   const id = req.params.id;
   const singleBlog = await BlogModel.findById(id);
-  res.send('個別記事削除ページ');
+  res.render('blogDelete', { singleBlog });
 });
 
 app.post('/blog/delete/:id', async (req, res) => {
