@@ -50,8 +50,53 @@ app.post('/blog/create', async (req, res) => {
 });
 
 // Read All Blogs
-app.get('/', function (req, res) {
-  res.send('<h1>こんにちは</h1>');
+app.get('/', async (req, res) => {
+  const allBlogs = await BlogModel.find();
+  res.send('全ブログデータを読み取りました');
+});
+
+// Read Single Blog
+app.get('/blog/:id', async (req, res) => {
+  const id = req.params.id;
+  const singleBlog = await BlogModel.findById(id);
+  console.log(singleBlog);
+  res.send('個別の記事ページ');
+});
+
+// Update Blog
+app.get('/blog/update/:id', async (req, res) => {
+  const id = req.params.id;
+  const singleBlog = await BlogModel.findById(id);
+  res.send('個別の記事編集ページ');
+});
+
+app.post('/blog/update/:id', async (req, res) => {
+  const id = req.params.id;
+  const updateData = req.body;
+  try {
+    const updateResult = await BlogModel.updateOne({ _id: id }, updateData);
+    res.send('ブログデータの編集が失敗しました');
+  } catch (error) {
+    console.log(error);
+    res.send('ブログデータの編集が成功しました');
+  }
+});
+// Delete Blog
+app.get('/blog/delete/:id', async (req, res) => {
+  const id = req.params.id;
+  const singleBlog = await BlogModel.findById(id);
+  res.send('個別記事削除ページ');
+});
+
+app.post('/blog/delete/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    await BlogModel.deleteOne({ _id: id });
+    res.send('ブログデータの削除が成功しました');
+  } catch (error) {
+    console.log(error);
+    res.send('ブログデータの削除が失敗しました');
+  }
 });
 
 const PORT = process.env.PORT || 5000;
