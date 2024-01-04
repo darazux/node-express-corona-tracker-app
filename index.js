@@ -68,7 +68,7 @@ app.get('/blog/:id', async (req, res) => {
 app.get('/blog/update/:id', async (req, res) => {
   const id = req.params.id;
   const singleBlog = await BlogModel.findById(id);
-  res.send('個別の記事編集ページ');
+  res.render('blogUpdate', { singleBlog });
 });
 
 app.post('/blog/update/:id', async (req, res) => {
@@ -76,10 +76,10 @@ app.post('/blog/update/:id', async (req, res) => {
   const updateData = req.body;
   try {
     const updateResult = await BlogModel.updateOne({ _id: id }, updateData);
-    res.send('ブログデータの編集が失敗しました');
+    res.send('ブログデータの編集が成功しました');
   } catch (error) {
     console.log(error);
-    res.send('ブログデータの編集が成功しました');
+    res.send('ブログデータの編集が失敗しました');
   }
 });
 // Delete Blog
