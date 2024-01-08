@@ -7,6 +7,8 @@ app.use(express.urlencoded({ extended: true }));
 const mongoose = require('mongoose');
 const session = require('express-session');
 
+// for Vercel path
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 
