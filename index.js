@@ -75,24 +75,26 @@ app.get('/blog/create', (req, res) => {
 app.post('/blog/create', async (req, res) => {
   try {
     const blog = await BlogModel.create(req.body);
-    res.send('投稿成功');
+    res.redirect('/');
   } catch (error) {
     console.log(error);
-    res.send('投稿失敗');
+    res.render('error', { message: '/blog/createのエラー' });
   }
 });
 
 // Read All Blogs
 app.get('/', async (req, res) => {
+  const userId = req.session.userId;
   const allBlogs = await BlogModel.find();
-  res.render('index', { allBlogs });
+  res.render('index', { allBlogs: allBlogs, session: userId });
 });
 
 // Read Single Blog
 app.get('/blog/:id', async (req, res) => {
   const id = req.params.id;
+  const userId = req.session.userId;
   const singleBlog = await BlogModel.findById(id);
-  res.render('blogRead', { singleBlog });
+  res.render('blogRead', { singleBlog: singleBlog, session: userId });
 });
 
 // Update Blog
@@ -107,10 +109,10 @@ app.post('/blog/update/:id', async (req, res) => {
   const updateData = req.body;
   try {
     const updateResult = await BlogModel.updateOne({ _id: id }, updateData);
-    res.send('ブログデータの編集が成功しました');
+    res.redirect('/');
   } catch (error) {
     console.log(error);
-    res.send('ブログデータの編集が失敗しました');
+    res.render('error', { message: '/blog/updateのエラー' });
   }
 });
 // Delete Blog
@@ -124,10 +126,10 @@ app.post('/blog/delete/:id', async (req, res) => {
   const id = req.params.id;
   try {
     await BlogModel.deleteOne({ _id: id });
-    res.send('ブログデータの削除が成功しました');
+    res.redirect('/');
   } catch (error) {
     console.log(error);
-    res.send('ブログデータの削除が失敗しました');
+    res.render('error', { message: '/blog/deleteのエラー' });
   }
 });
 
@@ -141,10 +143,10 @@ app.post('/user/create', async (req, res) => {
   try {
     const userData = req.body;
     const userModel = await UserModel.create(userData);
-    res.send('ユーザーデータの書き込みが成功しました');
+    res.redirect('/user/login');
   } catch (error) {
     console.log(error);
-    res.send('ユーザーデータの書き込みが失敗しました');
+    res.render('error', { message: '/user/createのエラー' });
   }
 });
 
@@ -159,15 +161,19 @@ app.post('/user/login', async (req, res) => {
     const password = req.body.password;
     const savedUserData = await UserModel.findOne({ email: email });
     if (!savedUserData) {
-      res.send('ユーザーが存在していません');
+      res.render('error', {
+        message: '/user/loginのエラー：ユーザーが存在しません',
+      });
       return;
     }
     if (password !== savedUserData.password) {
-      res.send('パスワードが間違っています');
+      res.render('error', {
+        message: '/user/loginのエラー：パスワードが間違っています',
+      });
       return;
     }
     req.session.userId = savedUserData._id;
-    res.send('ログイン成功です');
+    res.redirect('/');
   } catch (error) {
     console.log(error);
   }
