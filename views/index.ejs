@@ -9,12 +9,12 @@
   <body>
     <%- include("./header"); %>
     <main>
-      <div>
+      <div class="grid-container">
         <% allBlogs.forEach((blog) => { %>
-          <div>
+          <div class="card">
             <a href="blog/<%= blog._id %>">
               <img src="/public/images<%= blog.image %>" alt="blog-image" />
-              <div>
+              <div class="texts-area">
                 <h2><%= blog.title %></h2>
                 <p><%= blog.summary %></p>
               </div>
@@ -22,6 +22,14 @@
           </div>
         <% }) %>
       </div>
+      <div class="bottom">
+        <% if (session !== undefined) { %>
+          <a href="/blog/create" class="create-button">記事を書く</a>
+        <% } %>
+        <% if (session === undefined) { %>
+          <a href="/user/login" class="login-button">ログイン</a>
+          <a href="/user/create" class="user-create-button">登録する</a>
+        <% } %>
     </main>
     <%- include("./footer"); %>
   </body>
