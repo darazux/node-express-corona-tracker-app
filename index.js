@@ -6,9 +6,14 @@ require('dotenv').config();
 app.use(express.urlencoded({ extended: true }));
 const mongoose = require('mongoose');
 const session = require('express-session');
+const path = require('path');
 
 // for Vercel path
-app.set('views', path.join(__dirname, 'views'));
+if (process.env.VERCEL) {
+  app.set('views', path.join(__dirname, 'views'));
+} else {
+  app.set('views', 'views');
+}
 app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 
