@@ -11,11 +11,12 @@ const path = require('path');
 // for Vercel path
 if (process.env.VERCEL) {
   app.set('views', path.join(__dirname, 'views'));
+  app.set('/public', express.static(__dirname + '/public'));
 } else {
   app.set('views', 'views');
+  app.use('/public', express.static('public'));
 }
 app.set('view engine', 'ejs');
-app.use('/public', express.static('public'));
 
 // Session
 app.use(
