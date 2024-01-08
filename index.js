@@ -5,9 +5,20 @@ const app = express();
 require('dotenv').config();
 app.use(express.urlencoded({ extended: true }));
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
+
+// Session
+app.use(
+  session({
+    secret: 'secretKey',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 300000 },
+  }),
+);
 
 // Connecting MongoDB
 const mongodbUserName = process.env.MONGODB_USERNAME;
@@ -53,17 +64,19 @@ const BlogModel = mongoose.models.Blog || mongoose.model('Blog', BlogSchema);
 const UserModel = mongoose.models.User || mongoose.model('User', UserSchema);
 
 app.get('/blog/create', (req, res) => {
+  // no session data exist
+  if (!req.session.userId) {
+    res.redirect('/user/login');
+    return;
+  }
   res.render('blogCreate');
 });
 
 app.post('/blog/create', async (req, res) => {
-  console.log('req ', req.body);
   try {
     const blog = await BlogModel.create(req.body);
-    console.log('データの書き込みが成功しました');
     res.send('投稿成功');
   } catch (error) {
-    console.log('データの書き込みが失敗しました');
     console.log(error);
     res.send('投稿失敗');
   }
@@ -153,6 +166,7 @@ app.post('/user/login', async (req, res) => {
       res.send('パスワードが間違っています');
       return;
     }
+    req.session.userId = savedUserData._id;
     res.send('ログイン成功です');
   } catch (error) {
     console.log(error);
