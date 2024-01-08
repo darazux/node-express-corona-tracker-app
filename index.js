@@ -135,6 +135,30 @@ app.post('/user/create', async (req, res) => {
   }
 });
 
+// Login user
+app.get('/user/login', (req, res) => {
+  res.render('login');
+});
+
+app.post('/user/login', async (req, res) => {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+    const savedUserData = await UserModel.findOne({ email: email });
+    if (!savedUserData) {
+      res.send('ユーザーが存在していません');
+      return;
+    }
+    if (password !== savedUserData.password) {
+      res.send('パスワードが間違っています');
+      return;
+    }
+    res.send('ログイン成功です');
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, function () {
