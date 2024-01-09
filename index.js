@@ -186,6 +186,10 @@ app.post('/user/login', async (req, res) => {
   }
 });
 
+app.get('*', (req, res) => {
+  res.render('error', { message: 'ページが存在しません' });
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, function () {
