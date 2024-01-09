@@ -21,7 +21,7 @@ app.set('view engine', 'ejs');
 // Session
 app.use(
   session({
-    secret: 'secretKey',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 300000 },
